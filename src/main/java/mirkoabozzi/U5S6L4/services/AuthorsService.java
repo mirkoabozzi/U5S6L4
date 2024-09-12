@@ -64,8 +64,10 @@ public class AuthorsService {
     }
 
     // IMG UPLOAD
-    public void imgUpload(MultipartFile file) throws IOException {
+    public void imgUpload(MultipartFile file, UUID id) throws IOException {
         String url = (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
-
+        Author au = this.findById(id);
+        au.setAvatar(url);
+        this.authorsRepository.save(au);
     }
 }

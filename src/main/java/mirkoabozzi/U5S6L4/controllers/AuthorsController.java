@@ -63,7 +63,7 @@ public class AuthorsController {
 
     //POST IMG
     @PostMapping("/avatar/{id}")
-    public void avatarUpload(@RequestParam("avatar") MultipartFile img) throws IOException {
-        this.authorsService.imgUpload(img);
+    public void avatarUpload(@RequestParam("avatar") MultipartFile img, @PathVariable UUID id) throws IOException {
+        this.authorsService.imgUpload(img, id);
     }
 }
