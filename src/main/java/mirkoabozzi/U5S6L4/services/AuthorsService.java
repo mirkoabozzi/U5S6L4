@@ -47,13 +47,13 @@ public class AuthorsService {
     }
 
     //PUT
-    public Author findByIdAndUpdate(UUID id, Author newAuthor) {
+    public Author findByIdAndUpdate(UUID id, NewAuthorDTO newAuthor) {
         Author found = this.findById(id);
-        found.setName(newAuthor.getName());
-        found.setSurname(newAuthor.getSurname());
-        found.setEmail(newAuthor.getEmail());
-        found.setBirthDate(newAuthor.getBirthDate());
-        found.setAvatar("https://ui-avatars.com/api/?name=" + newAuthor.getName() + "+" + newAuthor.getSurname());
+        found.setName(newAuthor.name());
+        found.setSurname(newAuthor.surname());
+        found.setEmail(newAuthor.email());
+        found.setBirthDate(newAuthor.birthDate());
+        found.setAvatar("https://ui-avatars.com/api/?name=" + newAuthor.name() + "+" + newAuthor.surname());
         return this.authorsRepository.save(found);
     }
 

@@ -50,8 +50,13 @@ public class AuthorsController {
 
     //PUT
     @PutMapping("/{id}")
-    private Author findByIdAndUpdate(@PathVariable UUID id, @RequestBody Author body) {
-        return authorsService.findByIdAndUpdate(id, body);
+    private Author findByIdAndUpdate(@PathVariable UUID id, @RequestBody @Validated NewAuthorDTO body, BindingResult validation) {
+        if (validation.hasErrors()) {
+            String msg = validation.getAllErrors().stream().map(error -> error.getDefaultMessage()).collect(Collectors.joining(" ."));
+            throw new BadRequestException("Payload error: " + msg);
+        } else {
+            return authorsService.findByIdAndUpdate(id, body);
+        }
     }
 
     //DELETE
