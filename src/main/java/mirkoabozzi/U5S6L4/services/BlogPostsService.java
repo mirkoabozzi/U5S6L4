@@ -1,5 +1,7 @@
 package mirkoabozzi.U5S6L4.services;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import mirkoabozzi.U5S6L4.entities.Author;
 import mirkoabozzi.U5S6L4.entities.BlogPost;
 import mirkoabozzi.U5S6L4.entities.BlogPostsPayload;
@@ -10,11 +12,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.UUID;
 
 @Service
 public class BlogPostsService {
+    @Autowired
+    Cloudinary cloudinary;
     @Autowired
     private BlogPostsRepository blogPostsRepository;
     @Autowired
@@ -62,4 +68,11 @@ public class BlogPostsService {
         this.blogPostsRepository.delete(found);
     }
 
+    // IMG UPLOAD
+    public void imgUpload(MultipartFile file, UUID id) throws IOException {
+        String url = (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
+        BlogPost bp = this.findById(id);
+        bp.setCover(url);
+        this.blogPostsRepository.save(bp);
+    }
 }

@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.UUID;
 
 @RestController
@@ -49,6 +51,12 @@ public class BlogPostsController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     private void findByIdAndDelete(@PathVariable UUID id) {
         blogPostsService.findBiIdAndDelete(id);
+    }
+
+    //POST COVER
+    @PostMapping("/cover/{id}")
+    public void coverUpload(@RequestParam("cover") MultipartFile img, @PathVariable UUID id) throws IOException {
+        this.blogPostsService.imgUpload(img, id);
     }
 
 }
