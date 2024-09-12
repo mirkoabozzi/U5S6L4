@@ -2,9 +2,9 @@ package mirkoabozzi.U5S6L4.services;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import mirkoabozzi.U5S6L4.dto.BlogPostsDTO;
 import mirkoabozzi.U5S6L4.entities.Author;
 import mirkoabozzi.U5S6L4.entities.BlogPost;
-import mirkoabozzi.U5S6L4.entities.BlogPostsPayload;
 import mirkoabozzi.U5S6L4.exceptions.NotFoundException;
 import mirkoabozzi.U5S6L4.repositories.BlogPostsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,28 +38,26 @@ public class BlogPostsService {
     }
 
     // POST
-    public BlogPost saveBlogPost(BlogPostsPayload payload) {
+    public BlogPost saveBlogPost(BlogPostsDTO payload) {
         BlogPost bp = new BlogPost();
-        Author authorFound = this.authorsService.findById(payload.getAuthorId());
+        Author authorFound = this.authorsService.findById(payload.authorId());
         bp.setAuthor(authorFound);
-        bp.setCategory(payload.getCategory());
-        bp.setContent(payload.getContent());
-        bp.setReadingTime(payload.getReadingTime());
-        bp.setTitle(payload.getTitle());
-        bp.setCover("http://localhost:8080/" + payload.getTitle());
-        this.blogPostsRepository.save(bp);
-        return bp;
+        bp.setCategory(payload.category());
+        bp.setContent(payload.content());
+        bp.setReadingTime(payload.readingTime());
+        bp.setTitle(payload.title());
+        bp.setCover("http://localhost:8080/" + payload.title());
+        return this.blogPostsRepository.save(bp);
     }
 
     //PUT
-    public BlogPost findByIdAndUpdate(UUID id, BlogPost newBlogPost) {
+    public BlogPost findByIdAndUpdate(UUID id, BlogPostsDTO newBlogPost) {
         BlogPost found = this.findById(id);
-        found.setCategory(newBlogPost.getCategory());
-        found.setTitle(newBlogPost.getTitle());
-        found.setContent(newBlogPost.getContent());
-        found.setReadingTime(newBlogPost.getReadingTime());
-        this.blogPostsRepository.save(found);
-        return found;
+        found.setCategory(newBlogPost.category());
+        found.setTitle(newBlogPost.title());
+        found.setContent(newBlogPost.content());
+        found.setReadingTime(newBlogPost.readingTime());
+        return this.blogPostsRepository.save(found);
     }
 
     //DELETE
