@@ -20,7 +20,7 @@ import java.util.UUID;
 @Service
 public class BlogPostsService {
     @Autowired
-    Cloudinary cloudinary;
+    private Cloudinary cloudinary;
     @Autowired
     private BlogPostsRepository blogPostsRepository;
     @Autowired
@@ -68,8 +68,8 @@ public class BlogPostsService {
 
     // IMG UPLOAD
     public void imgUpload(MultipartFile file, UUID id) throws IOException {
-        String url = (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
         BlogPost bp = this.findById(id);
+        String url = (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
         bp.setCover(url);
         this.blogPostsRepository.save(bp);
     }

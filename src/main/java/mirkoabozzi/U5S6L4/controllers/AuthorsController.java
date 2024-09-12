@@ -1,6 +1,6 @@
 package mirkoabozzi.U5S6L4.controllers;
 
-import mirkoabozzi.U5S6L4.dto.NewAuthorDTO;
+import mirkoabozzi.U5S6L4.dto.NewAuthorsDTO;
 import mirkoabozzi.U5S6L4.entities.Author;
 import mirkoabozzi.U5S6L4.exceptions.BadRequestException;
 import mirkoabozzi.U5S6L4.services.AuthorsService;
@@ -39,7 +39,7 @@ public class AuthorsController {
     //POST
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    private Author saveAuthor(@RequestBody @Validated NewAuthorDTO body, BindingResult validation) {
+    private Author saveAuthor(@RequestBody @Validated NewAuthorsDTO body, BindingResult validation) {
         if (validation.hasErrors()) {
             String msg = validation.getAllErrors().stream().map(error -> error.getDefaultMessage()).collect(Collectors.joining(" ."));
             throw new BadRequestException("Payload error: " + msg);
@@ -50,7 +50,7 @@ public class AuthorsController {
 
     //PUT
     @PutMapping("/{id}")
-    private Author findByIdAndUpdate(@PathVariable UUID id, @RequestBody @Validated NewAuthorDTO body, BindingResult validation) {
+    private Author findByIdAndUpdate(@PathVariable UUID id, @RequestBody @Validated NewAuthorsDTO body, BindingResult validation) {
         if (validation.hasErrors()) {
             String msg = validation.getAllErrors().stream().map(error -> error.getDefaultMessage()).collect(Collectors.joining(" ."));
             throw new BadRequestException("Payload error: " + msg);

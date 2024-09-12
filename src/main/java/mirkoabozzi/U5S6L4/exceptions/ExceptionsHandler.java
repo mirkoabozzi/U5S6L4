@@ -14,6 +14,7 @@ public class ExceptionsHandler {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorsDTO handleAllErrors(Exception ex) {
+        ex.printStackTrace();
         return new ErrorsDTO("Server Error", LocalDateTime.now());
     }
 

@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 
-public record NewAuthorDTO(
+public record NewAuthorsDTO(
         @NotEmpty(message = "Name is required")
         String name,
         @NotEmpty(message = "Surname is required")

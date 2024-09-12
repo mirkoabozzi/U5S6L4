@@ -3,7 +3,7 @@ package mirkoabozzi.U5S6L4.services;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import mirkoabozzi.U5S6L4.dto.NewAuthorDTO;
+import mirkoabozzi.U5S6L4.dto.NewAuthorsDTO;
 import mirkoabozzi.U5S6L4.entities.Author;
 import mirkoabozzi.U5S6L4.exceptions.BadRequestException;
 import mirkoabozzi.U5S6L4.exceptions.NotFoundException;
@@ -22,7 +22,7 @@ import java.util.UUID;
 @Service
 public class AuthorsService {
     @Autowired
-    Cloudinary cloudinary;
+    private Cloudinary cloudinary;
     @Autowired
     private AuthorsRepository authorsRepository;
 
@@ -39,7 +39,7 @@ public class AuthorsService {
     }
 
     //POST
-    public Author saveAuthor(NewAuthorDTO payload) {
+    public Author saveAuthor(NewAuthorsDTO payload) {
         if (authorsRepository.existsByEmail(payload.email()))
             throw new BadRequestException("Email " + payload.email() + " già presente nel DB");
         Author newAuthor = new Author(payload.name(), payload.surname(), payload.email(), payload.birthDate(), "https://ui-avatars.com/api/?name=" + payload.name() + "+" + payload.surname());
@@ -47,7 +47,7 @@ public class AuthorsService {
     }
 
     //PUT
-    public Author findByIdAndUpdate(UUID id, NewAuthorDTO newAuthor) {
+    public Author findByIdAndUpdate(UUID id, NewAuthorsDTO newAuthor) {
         Author found = this.findById(id);
         found.setName(newAuthor.name());
         found.setSurname(newAuthor.surname());
@@ -65,8 +65,8 @@ public class AuthorsService {
 
     // IMG UPLOAD
     public void imgUpload(MultipartFile file, UUID id) throws IOException {
-        String url = (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
         Author au = this.findById(id);
+        String url = (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
         au.setAvatar(url);
         this.authorsRepository.save(au);
     }
