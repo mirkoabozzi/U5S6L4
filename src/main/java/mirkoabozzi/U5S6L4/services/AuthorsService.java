@@ -1,6 +1,8 @@
 package mirkoabozzi.U5S6L4.services;
 
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import mirkoabozzi.U5S6L4.dto.NewAuthorDTO;
 import mirkoabozzi.U5S6L4.entities.Author;
 import mirkoabozzi.U5S6L4.exceptions.BadRequestException;
@@ -12,11 +14,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.UUID;
 
 @Service
 public class AuthorsService {
+    @Autowired
+    Cloudinary cloudinary;
     @Autowired
     private AuthorsRepository authorsRepository;
 
@@ -38,7 +44,6 @@ public class AuthorsService {
             throw new BadRequestException("Email " + payload.email() + " già presente nel DB");
         Author newAuthor = new Author(payload.name(), payload.surname(), payload.email(), payload.birthDate(), "https://ui-avatars.com/api/?name=" + payload.name() + "+" + payload.surname());
         return this.authorsRepository.save(newAuthor);
-
     }
 
     //PUT
@@ -49,8 +54,7 @@ public class AuthorsService {
         found.setEmail(newAuthor.getEmail());
         found.setBirthDate(newAuthor.getBirthDate());
         found.setAvatar("https://ui-avatars.com/api/?name=" + newAuthor.getName() + "+" + newAuthor.getSurname());
-        this.authorsRepository.save(found);
-        return found;
+        return this.authorsRepository.save(found);
     }
 
     //DELETE
@@ -59,4 +63,9 @@ public class AuthorsService {
         this.authorsRepository.delete(found);
     }
 
+    // IMG UPLOAD
+    public void imgUpload(MultipartFile file) throws IOException {
+        String url = (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
+
+    }
 }
