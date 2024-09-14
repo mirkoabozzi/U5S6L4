@@ -13,6 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,6 +27,8 @@ public class AuthorsService {
     private Cloudinary cloudinary;
     @Autowired
     private AuthorsRepository authorsRepository;
+    @Autowired
+    private JavaMailSenderImpl javaMailSender;
 
     //GET ALL
     public Page<Author> findAll(int page, int size, String shortBy) {
@@ -43,7 +47,15 @@ public class AuthorsService {
         if (authorsRepository.existsByEmail(payload.email()))
             throw new BadRequestException("Email " + payload.email() + " già presente nel DB");
         Author newAuthor = new Author(payload.name(), payload.surname(), payload.email(), payload.birthDate(), "https://ui-avatars.com/api/?name=" + payload.name() + "+" + payload.surname());
+
+        SimpleMailMessage msg = new SimpleMailMessage();
+        msg.setFrom(javaMailSender.getUsername());
+        msg.setTo(payload.email());
+        msg.setText("Ciao " + payload.name() + " " + payload.surname() + " questa è una email inviata da JAVA, grazie per esserti registrato ");
+        javaMailSender.send(msg);
+
         return this.authorsRepository.save(newAuthor);
+
     }
 
     //PUT
